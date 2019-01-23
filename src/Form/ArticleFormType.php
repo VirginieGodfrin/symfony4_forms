@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use App\Entity\Article;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 // Form classes are usually called form "types", 
 // and the only rule is that they must extend a class called AbstractType . 
@@ -15,7 +16,10 @@ class ArticleFormType extends AbstractType{
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 		// build the form
 		$builder 
-			->add('title') 
+			// the add() method has three arguments: the field name, the field type and some options.
+			->add('title', TextType::class, [
+				'help' => 'Choose something catchy!'
+			]) 
 			->add('content')
 		;
 	}

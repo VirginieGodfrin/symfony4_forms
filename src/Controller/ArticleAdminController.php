@@ -27,12 +27,8 @@ class ArticleAdminController extends AbstractController
         // handleRequest() sees that this is a GET request,
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
-             dd($form->getData());
-            $data = $form->getData();
-            $article = new Article(); 
-            $article->setTitle($data['title']); 
-            $article->setContent($data['content']); 
-            $article->setAuthor($this->getUser());
+            /** @var Article $article */
+            $article = $form->getData();
 
             $em->persist($article); 
             $em->flush();
