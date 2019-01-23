@@ -132,6 +132,12 @@ class Article
         return $this;
     }
 
+    // check if it's published
+    public function isPublished(): bool 
+    {
+        return $this->publishedAt !== null; 
+    }
+
     public function getHeartCount(): ?int
     {
         return $this->heartCount;
