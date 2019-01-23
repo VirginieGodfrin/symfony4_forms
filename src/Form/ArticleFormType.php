@@ -9,14 +9,23 @@ use App\Entity\Article;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\User;
+use App\Repository\UserRepository;
 
 // Form classes are usually called form "types", 
 // and the only rule is that they must extend a class called AbstractType . 
 
 class ArticleFormType extends AbstractType{
 
+	// Form types are services! So we can use our favorite pattern: dependency injection.
+	private $userRepository;
+
+	public function __construct(UserRepository $userRepository)
+	{
+		$this->userRepository = $userRepository;
+	}
+
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-		// build the form
+
 		$builder 
 			// the add() method has three arguments: the field name, the field type and some options.
 			->add('title', TextType::class, [
@@ -34,6 +43,13 @@ class ArticleFormType extends AbstractType{
 					return sprintf('(%d) %s', $user->getId(), $user->getEmail());
 				},
 				'placeholder' => 'Choose an author',
+				// Normally, when you use the EntityType , you don't need to pass the choices option. 
+				// Remember, if you look at ChoiceType , the choices option is how you specify which, ah, choices you want to show in the drop-down. 
+				// But EntityType queries for the choices and basically sets this option for us.
+				// To control that query, there's an option called query_builder . 
+				// Or, you can do what I do: be less fancy and simply override the choices option entirely. 
+				// Yep, you basically say:
+				'choices' => $this->userRepository->findAllEmailAlphabetical(),
 			])
 		;
 	}
