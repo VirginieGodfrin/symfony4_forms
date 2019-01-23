@@ -21,6 +21,17 @@ class ArticleFormType extends AbstractType{
 				'help' => 'Choose something catchy!'
 			]) 
 			->add('content')
+			// To set an option on the publishedAt field, pass null as the second argument and set up the array as the third. 
+			// Null just tells Symfony to continue "guessing" this field type. 
+			// Basically, I'm being lazy: we could pass DateTimeType::class ... but we don't need to!
+			->add('publishedAt', null, [
+				'widget' => 'single_text'
+			])
+			// In reality, each field type - like DateTimeType - has two superpowers. 
+			// First, it determines how the field is rendered. Like, an input type="text" field or, a bunch of drop-downs, 
+			// or a fancy datetime-local input. 
+			// Second... and this is the real superpower, a field type is able to transform the data to and from your object 
+			// and the form. This is called "data transformation".
 		;
 	}
 
