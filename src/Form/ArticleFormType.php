@@ -50,6 +50,8 @@ class ArticleFormType extends AbstractType{
 				// Or, you can do what I do: be less fancy and simply override the choices option entirely. 
 				// Yep, you basically say:
 				'choices' => $this->userRepository->findAllEmailAlphabetical(),
+				// a way to validate fields, require validator
+				'invalid_message' => 'Symfony is too smart for your hacking!'
 			])
 		;
 	}

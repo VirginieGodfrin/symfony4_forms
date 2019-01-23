@@ -24,7 +24,11 @@ class ArticleAdminController extends AbstractController
         $form = $this->createForm(ArticleFormType::class);
         // By default, handleRequest() only processes the data when this is a POST request. 
         // So, when the form is being submitted. When the form is originally loaded, 
-        // handleRequest() sees that this is a GET request,
+        // handleRequest() 
+        //      sees that this is a GET request,
+        //      reads the data and executes Symfony's validation system. 
+        //      If validation fails, then $form->isValid() returns false and we immediately render the template, 
+        //      except that now errors will be displayed by each field with an error.
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             /** @var Article $article */
