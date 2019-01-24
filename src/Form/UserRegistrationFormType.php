@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 
 
 class UserRegistrationFormType extends AbstractType
@@ -18,7 +19,7 @@ class UserRegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email')
+            ->add('email',  EmailType::class)
             ->add('plainPassword', PasswordType::class, [
                 // This tells the form system that we do want to have this plainPassword field on our form, 
                 // but that it should not get or set its data back onto the User object. 

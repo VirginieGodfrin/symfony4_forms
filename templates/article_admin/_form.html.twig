@@ -1,4 +1,6 @@
-{{ form_start(articleForm) }}
+{{ form_start(registrationForm, { 
+	'attr': {'class': 'form-signin'}
+}) }}
 	{{ form_row(articleForm.title, { 
 		label: 'Article title'
 	}) }}
