@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use App\Form\UserRegistrationFormType;
 
 class SecurityController extends AbstractController
 {
@@ -43,14 +44,14 @@ class SecurityController extends AbstractController
      */
     public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $formAuthenticator)
     {
-        // TODO - use Symfony forms & validation
-        if ($request->isMethod('POST')) {
-            $user = new User();
-            $user->setEmail($request->request->get('email'));
-            $user->setFirstName('Mystery');
-            $user->setPassword($passwordEncoder->encodePassword(
+        $form = $this->createForm(UserRegistrationFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $form->getData();
+            $user->setPassword($passwordEncoder->encodePassword( 
                 $user,
-                $request->request->get('password')
+                $user->getPassword() 
             ));
 
             $em = $this->getDoctrine()->getManager();
@@ -64,7 +65,8 @@ class SecurityController extends AbstractController
                 'main'
             );
         }
-
-        return $this->render('security/register.html.twig');
+        return $this->render('security/register.html.twig', [ 
+            'registrationForm' => $form->createView(),
+        ]);
     }
 }

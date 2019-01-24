@@ -31,8 +31,9 @@ class User implements UserInterface
      */
     private $roles = [];
 
+    // I do want to allow users to register without their firstName . No problem: set nullable=true 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups("main")
      */
     private $firstName;
