@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ArticleRepository")
@@ -26,6 +28,7 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Never forget the title!")
      */
     private $title;
 
@@ -251,5 +254,20 @@ class Article
         $this->author = $author;
 
         return $this;
+    }
+
+    // callback validation
+    /**
+     * @Assert\Callback 
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        // To create the error, use $context->buildViolation()
+        if (stripos($this->getTitle(), 'the borg') !== false) { 
+            $context->buildViolation('Um.. the Bork kinda makes us nervous')
+                ->atPath('title') //which field to attach the error
+                ->addViolation(); 
+        }
+    
     }
 }
