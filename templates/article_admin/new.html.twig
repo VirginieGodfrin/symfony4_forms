@@ -4,7 +4,15 @@
 	<h1>Launch a new Article!  </h1>
 
 	{{ form_start(articleForm) }}
-	{{ form_widget(articleForm) }}
+	{# The form_row() function basically adds a "wrapper" around the field
+		- like a div - then renders the 4 components of each field: the label, 
+		the "widget" - that's the form field itself, the help text and,
+		if needed, the validation errors. 
+	#}
+		{{ form_row(articleForm.title) }}
+		{{ form_row(articleForm.author) }}
+		{{ form_row(articleForm.content) }}
+		{{ form_row(articleForm.publishedAt) }}
 		<button type="submit" class="btn btn-primary">Create!</button> 
 	{{ form_end(articleForm) }}
 
