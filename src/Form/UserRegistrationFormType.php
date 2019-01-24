@@ -6,6 +6,8 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+
 
 class UserRegistrationFormType extends AbstractType
 {
@@ -13,7 +15,12 @@ class UserRegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('password')
+            ->add('plainPassword', PasswordType::class, [
+                // This tells the form system that we do want to have this plainPassword field on our form, 
+                // but that it should not get or set its data back onto the User object. 
+                // It means that we no longer need getPlainPassword() and setPlainPassword() methods!
+                'mapped' => false,
+            ])
         ;
     }
 
