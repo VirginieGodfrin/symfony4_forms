@@ -1,5 +1,24 @@
 {% extends 'base.html.twig' %}
 
+{% form_theme registrationForm _self %} {# Yo form system! I want to use this template as a form theme template for the registrationForm object #}
+
+{#  override this form_row from form_div_layout.html.twig (bootstrap_4_layout.html.twig),
+    you can add some code to your Twig template to use a specific form theme template only on certain forms.
+    first: at the top of the template where you form lives, add {% form_theme %} , the name of your form variable - registrationForm - and then _self .
+#}
+{% block form_row %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+    {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+
+    {{- form_label(form) -}}
+    {{- form_errors(form) -}}
+    {{- form_widget(form, widget_attr) -}}
+    {{- form_help(form) -}}
+{% endblock %}
+
+
 {% block title %}Register!{% endblock %}
 
 {% block stylesheets %}
