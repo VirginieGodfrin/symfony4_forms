@@ -9,7 +9,18 @@
 		the "widget" - that's the form field itself, the help text and,
 		if needed, the validation errors. 
 	#}
-		{{ form_row(articleForm.title) }}
+	{# accessing the variables is done by using a public vars property on the FormView object : {{articleForm.title.vars.id}} #}
+	
+		{# {{ form_row(articleForm.title) }} #}
+		{{ form_row(articleForm.title, { 
+			label: 'Article title'
+		}) }}
+
+		{# {{ form_label(articleForm.title, 'Article title') }} 
+		{{ form_errors(articleForm.title) }}
+		{{ form_widget(articleForm.title) }}
+		{{ form_help(articleForm.title) }} #}
+
 		{{ form_row(articleForm.author) }}
 		{{ form_row(articleForm.content) }}
 		{{ form_row(articleForm.publishedAt) }}
