@@ -11,8 +11,12 @@
     {%- if help is not empty -%}
     {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-
-    {{- form_label(form) -}}
+    {# wich variable can I use with form_row? #}
+    {# {{ dump() }} #}
+    {# add a class (variable) #}
+    {{- form_label(form, null, { 
+        label_attr: { class: 'sr-only' }
+    }) -}}
     {{- form_errors(form) -}}
     {{- form_widget(form, widget_attr) -}}
     {{- form_help(form) -}}
@@ -30,10 +34,18 @@
 {% block body %}
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-            {# todo - replace with a Symfony form! #}
-            {{ form_start(registrationForm) }}
-                {{ form_widget(registrationForm) }}
+        <div class="col-sm-4">
+            {{ form_start(registrationForm, { 
+                'attr': {'class': 'form-signin'}
+            }) }}
+                <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+                {{ form_row(registrationForm.email, { 
+                    attr: { placeholder: 'Email' }
+                }) }}
+                {{ form_row(registrationForm.plainPassword, {
+                    attr: { placeholder: 'Password' } 
+                }) }}
+                {{ form_row(registrationForm.agreeTerms) }}
                 <button class="btn btn-lg btn-primary btn-block" type="submit"> Register </button>
             {{ form_end(registrationForm) }}
         </div>
