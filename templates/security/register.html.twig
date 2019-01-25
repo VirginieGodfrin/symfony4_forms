@@ -22,6 +22,17 @@
     {{- form_help(form) -}}
 {% endblock %}
 
+{# Profiler, form, user_registartion_form, agreeTerms, view variable, unique_block_prefix =>_user_registration_form_agreeTerms #}
+{% block _user_registration_form_agreeTerms_row %}
+    <div class="checkbox mb-3">
+        {# {{ form_errors(form) }} to make sure any validation errors show up. #}
+        {{ form_errors(form) }} 
+        <label>
+            <input type="checkbox" name="{{ full_name }}" required> Agree to terms I for sure read 
+        </label>
+    </div>
+    {% endblock %}
+
 
 {% block title %}Register!{% endblock %}
 
