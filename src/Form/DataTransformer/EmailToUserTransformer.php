@@ -4,6 +4,7 @@ namespace App\Form\DataTransformer;
 use Symfony\Component\Form\DataTransformerInterface;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 
 // there is no data transformer method ! So when the form is submited the form system call setAuthor and try to pass
 // it the string first name ...To fix this, our field needs a data transformer: something that's capable of taking
@@ -44,9 +45,9 @@ class EmailToUserTransformer implements DataTransformerInterface
 	public function reverseTransform($value)
 	{
 		// dd('reverse transform', $value);
-
-
-
+		if(!$value){
+			return;
+		}
 		$user = $this->userRepository
 			->findOneBy(['email' => $value]);
 
