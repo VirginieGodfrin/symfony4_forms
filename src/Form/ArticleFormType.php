@@ -35,24 +35,9 @@ class ArticleFormType extends AbstractType{
 			->add('publishedAt', null, [
 				'widget' => 'single_text'
 			])
-			->add('author', EntityType::class, [
-				'class' => User::class,
-				// 'choice_label' => 'email',
-				// choice label with callback
-				'choice_label' => function(User $user) {
-					return sprintf('(%d) %s', $user->getId(), $user->getEmail());
-				},
-				'placeholder' => 'Choose an author',
-				// Normally, when you use the EntityType , you don't need to pass the choices option. 
-				// Remember, if you look at ChoiceType , the choices option is how you specify which, ah, choices you want to show in the drop-down. 
-				// But EntityType queries for the choices and basically sets this option for us.
-				// To control that query, there's an option called query_builder . 
-				// Or, you can do what I do: be less fancy and simply override the choices option entirely. 
-				// Yep, you basically say:
-				'choices' => $this->userRepository->findAllEmailAlphabetical(),
-				// a way to validate fields, require validator
-				'invalid_message' => 'Symfony is too smart for your hacking!'
-			])
+			// UserSelectTextType::class render a text field filled with the firstName (user to_string method) of the current author.
+			->add('author', UserSelectTextType::class)
+			// there is no data transformer method ! So when the form is submited the form system call setAuthor and try to pass it the string first name ...
 		;
 	}
 
