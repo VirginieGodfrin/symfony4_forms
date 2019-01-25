@@ -37,7 +37,7 @@ class ArticleFormType extends AbstractType{
 			])
 			// UserSelectTextType::class render a text field filled with the firstName (user to_string method) of the current author.
 			->add('author', UserSelectTextType::class)
-			// there is no data transformer method ! So when the form is submited the form system call setAuthor and try to pass it the string first name ...
+			
 		;
 	}
 
