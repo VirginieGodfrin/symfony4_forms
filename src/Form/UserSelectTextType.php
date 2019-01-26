@@ -51,6 +51,11 @@ class UserSelectTextType extends AbstractType
 			'finder_callback' => function(UserRepository $userRepository, string $email) {
                 return $userRepository->findOneBy(['email' => $email]);
             },
+            // add the class js-user-autocomplete to the input tag
+            // attr is one of a few things that can be passed either as a view variable or also as a field option.
+            'attr' => [
+				'class' => 'js-user-autocomplete'
+			]
 		]); 
 	}
 
