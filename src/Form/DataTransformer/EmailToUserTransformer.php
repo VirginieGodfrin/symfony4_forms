@@ -16,9 +16,17 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 class EmailToUserTransformer implements DataTransformerInterface
 {
 	private $userRepository;
-	public function __construct(UserRepository $userRepository) 
+	// the callback we use it to specify the query, 
+	// and use UserSelectTextType on many form
+	// To make this possible, our field needs to be more flexible: 
+	// instead of looking for any User with this email, 
+	// we need to be able to customize this query each time we use the field.
+	private $finderCallback;
+
+	public function __construct(UserRepository $userRepository, callable $finderCallback) 
 	{
-		$this->userRepository = $userRepository; 
+		$this->userRepository = $userRepository;
+		$this->finderCallback = $finderCallback; 
 	}
 
 	public function transform($value)
@@ -48,8 +56,17 @@ class EmailToUserTransformer implements DataTransformerInterface
 		if(!$value){
 			return;
 		}
-		$user = $this->userRepository
-			->findOneBy(['email' => $value]);
+
+		// Here's the idea: whoever instantiates this transformer will pass in a callback 
+		// that's responsible for querying for the User . Down below, instead of fetching it directly, 
+		// say $callback = $this->finderCallback and then,$user = $callback() . 
+		// For convenience, let's pass the function $this->userRepository .
+		//  And of course, it will need the $value that was just submitted.
+		$callback = $this->finderCallback;
+		$user = $callback(
+			$this->userRepository, 
+			$value
+		);
 
 		if (!$user) {
 			throw new TransformationFailedException(sprintf('No user found with email "%s"', $value));

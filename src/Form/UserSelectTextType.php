@@ -22,9 +22,13 @@ class UserSelectTextType extends AbstractType
 	// use the builderInterface methode (addModelTransformer) to transform the datatransformer
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		// EmailToUserTransformer is not a service ! This object is not instantiated by Symfony's container. So, we don't get our cool autowiring magic
+		// EmailToUserTransformer is not a service ! This object is not instantiated by Symfony's container.
+		// So, we don't get our cool autowiring magic
+		// Next, check out the build() method. See this array of $options ? That will now include
+		// finder_callback , which will either be our default value, or some other callback if it was overridden.
 		$builder->addModelTransformer(new EmailToUserTransformer(
-			$this->userRepository
+			$this->userRepository,
+			$options['finder_callback']
 		));
 	}
 	// with getParent UserSelectTextType will work like textType
@@ -38,8 +42,15 @@ class UserSelectTextType extends AbstractType
 	// But when you're creating a custom field type: configureOptions() is used to set the options for that specific field.
 	public function configureOptions(OptionsResolver $resolver) 
 	{
+		// Add a new option called finder_callback and give it a default value: 
+		// a callback that accepts a UserRepository $userRepository argument and the value - 
+		// which will be a string $email .
+		// Inside return the normal $userRepository->findOneBy() with ['email' => $email] .
 		$resolver->setDefaults([
 			'invalid_message' => 'Hmm, user not found!',
+			'finder_callback' => function(UserRepository $userRepository, string $email) {
+                return $userRepository->findOneBy(['email' => $email]);
+            },
 		]); 
 	}
 

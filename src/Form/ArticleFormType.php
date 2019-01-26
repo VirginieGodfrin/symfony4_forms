@@ -36,7 +36,13 @@ class ArticleFormType extends AbstractType{
 				'widget' => 'single_text'
 			])
 			// UserSelectTextType::class render a text field filled with the firstName (user to_string method) of the current author.
+			//	Finder callback resume:  In ArticleFormType , when we use UserSelectTextType , 
+			// we can pass a finder_callback option if we need to do a custom query. 
+			// If we did that, it would override the default value and, 
+			// when we instantiate EmailToUserTransformer , the second argument would be the callback 
+			// that we passed from ArticleFormType .
 			->add('author', UserSelectTextType::class)
+
 			
 		;
 	}
