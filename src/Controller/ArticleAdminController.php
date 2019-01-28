@@ -67,11 +67,10 @@ class ArticleAdminController extends AbstractController
      */
     public function edit(Article $article, Request $request, EntityManagerInterface $em)
     {
-        // about $article the Article object:
-        //      when Symfony renders the form, it calls the getter methods on that Article object and uses those values to
-        //      fill in the values for the fields.
-        //      when we submit, the form system calls the setter methods on that same Article object.
-        $form = $this->createForm(ArticleFormType::class, $article);
+        // the third argument: an array of options that you can pass to your form
+        $form = $this->createForm(ArticleFormType::class, $article, [
+            'include_published_at' => true
+        ]);
 
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){

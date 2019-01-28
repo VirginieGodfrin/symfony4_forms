@@ -25,32 +25,42 @@ class ArticleFormType extends AbstractType{
 	}
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
+		// we can see data in edit form and not in new form
+		// dd($options);
+
+		// if $options['data'] is not null and if it's exist , article = $options['data']
+		// but if $options['data'] do not exist set it to null
+		$article = $options['data'] ?? null;
+		// dd($article);
+		//  check if $article exist and if it got an id
+		$isEdit = $article && $article->getId();
 
 		$builder 
-			// the add() method has three arguments: the field name, the field type and some options.
 			->add('title', TextType::class, [
 				'help' => 'Choose something catchy!'
 			]) 
 			->add('content')
-			->add('publishedAt', null, [
-				'widget' => 'single_text'
-			])
-			// UserSelectTextType::class render a text field filled with the firstName (user to_string method) of the current author.
-			//	Finder callback resume:  In ArticleFormType , when we use UserSelectTextType , 
-			// we can pass a finder_callback option if we need to do a custom query. 
-			// If we did that, it would override the default value and, 
-			// when we instantiate EmailToUserTransformer , the second argument would be the callback 
-			// that we passed from ArticleFormType .
-			->add('author', UserSelectTextType::class)
-
-			
+			->add('author', UserSelectTextType::class,[
+				// But it also now ignores any submitted data for this field. 
+				// So, if a nasty user removed the disabled attribute and updated the field, 
+				// meh - no problem - our form will ignore that submitted data.
+				'disabled' => $isEdit // true or false
+			])	
 		;
+		// in edit form $options['include_published_at'] is set to true
+		// in new form $options['include_published_at'] is set to false 
+		if ($options['include_published_at']) { 
+			$builder->add('publishedAt', null, [
+				'widget' => 'single_text', 
+			]);
+		}
 	}
 
 	public function configureOptions(OptionsResolver $resolver) {
 		$resolver->setDefaults([ 
-			// This is where you can set options that control how your form behaves
-			'data_class' => Article::class
+			// Now, up in buildForm() , the $options array will always have an include_published_at key
+			'data_class' => Article::class,
+			'include_published_at' => false,
 		]); 
 	}
 	// But, when you bind your form to a class, a special system - 
