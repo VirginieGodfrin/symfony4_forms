@@ -35,3 +35,14 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    # Registering the Form Type Extension
+    # tags : specify the service, when you use it, you say the TextareaSizeExtension is a form.type_extension
+    # and must be use like that
+    # extended_type . We need to set this to the form type class that we want to extend
+    # with this way, each time we use TextareaType we can use the new textareaSizeextension propriety
+    App\Form\TypeExtension\TextareaSizeExtension:
+        tags:
+            - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\TextareaType }
+
+        
