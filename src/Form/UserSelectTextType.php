@@ -8,16 +8,19 @@ use Symfony\Component\Form\FormBuilderInterface;
 use App\Form\DataTransformer\EmailToUserTransformer;
 use App\Repository\UserRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 
 
 // Creating the Custom Form Type
 class UserSelectTextType extends AbstractType
 {
 	private $userRepository;
+	private $router;
 
-	public function __construct(UserRepository $userRepository) 
+	public function __construct(UserRepository $userRepository, RouterInterface $router) 
 	{
-		$this->userRepository = $userRepository; 
+		$this->userRepository = $userRepository;
+		$this->router = $router;
 	}
 	// use the builderInterface methode (addModelTransformer) to transform the datatransformer
 	public function buildForm(FormBuilderInterface $builder, array $options)
@@ -54,7 +57,8 @@ class UserSelectTextType extends AbstractType
             // add the class js-user-autocomplete to the input tag
             // attr is one of a few things that can be passed either as a view variable or also as a field option.
             'attr' => [
-				'class' => 'js-user-autocomplete'
+				'class' => 'js-user-autocomplete',
+				'data-autocomplete-url' => $this->router->generate('admin_utility_users')
 			]
 		]); 
 	}
