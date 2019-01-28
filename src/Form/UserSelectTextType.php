@@ -9,6 +9,8 @@ use App\Form\DataTransformer\EmailToUserTransformer;
 use App\Repository\UserRepository;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 
 
 // Creating the Custom Form Type
@@ -61,6 +63,27 @@ class UserSelectTextType extends AbstractType
 				'data-autocomplete-url' => $this->router->generate('admin_utility_users')
 			]
 		]); 
+	}
+	// the buildView 
+	// Symfony creates a bunch of variables that are used in the form theme system.
+	// Symfony calls this method on every field, and it is the place where these variables are created and can be changed.
+	public function buildView(FormView $view, FormInterface $form, array $options)
+	{
+		// create the attr var
+		$attr = $view->vars['attr'];
+		// if class is set on $attr, use it, but add a space on the end. 
+		// If there is no class yet, set this to be blank
+		$class = isset($attr['class']) ? $attr['class'].' ' : '';
+		// happend it the key
+		$class .= 'js-user-autocomplete';
+
+		// set the new class
+		$attr['class'] = $class;
+		// add the data-autocomplete-url attribute
+		$attr['data-autocomplete-url'] = $this->router->generate('admin_utility_users');
+
+		$view->vars['attr'] = $attr;
+		// a good way to know our attributes will be rendered no matter what the user passes to the attr option.
 	}
 
 }

@@ -1,15 +1,4 @@
-{% extends 'content_base.html.twig' %}
-
-{% block javascripts %} 
-	{{ parent() }}
-	<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script>
-	<script src="{{ asset('js/algolia_autocomplete.js') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-	{{ parent() }}
-	<link rel="stylesheet" href="{{ asset('css/algolia-autocomplete.css') }}">
-{% endblock %}
+{% extends 'article_admin/article_admin_base.html.twig' %}
 
 {% block content_body %} 
 	<h1>Edit the article!  </h1>

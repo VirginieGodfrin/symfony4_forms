@@ -10,6 +10,9 @@ $(document).ready(function(){
 				source:function(query, cb){
 					// the ajax call and his callback(then)
 					$.ajax({
+						// filetring the users
+						// The source function is passed a query argument: that's equal to whatever 
+						// is typed into the input box at that moment. Let's use that! Add a '?query='+query
 						url: autocompleteUrl+'?query='+query
 					}).then(function(data){
 						// because in getUsersApi controller we return a users Key
