@@ -34,8 +34,6 @@ class ArticleFormType extends AbstractType{
 		$article = $options['data'] ?? null;
 
 		$isEdit = $article && $article->getId();
-		// if $article is an object, then $article->getLocation() , otherwise, null 
-		$location = $article ? $article->getLocation() : null;
 
 		$builder 
 			->add('title', TextType::class, [
@@ -58,14 +56,6 @@ class ArticleFormType extends AbstractType{
 			])
 		;
 
-		if ($location) {
-			$builder->add('specificLocationName', ChoiceType::class, [
-				'placeholder' => 'Where exactly?',
-				'choices' => $this->getLocationNameChoices($location), 
-				'required' => false,
-			]); 
-		}
-
 		if ($options['include_published_at']) { 
 			$builder->add('publishedAt', null, [
 				'widget' => 'single_text', 
@@ -73,6 +63,26 @@ class ArticleFormType extends AbstractType{
 		}
 
 		// the Form Event 
+		// PRE_SET_DATA
+		// who can we re-add location fields using events
+		$builder->addEventListener(
+			FormEvents::PRE_SET_DATA,
+			function (FormEvent $event) {
+				/** @var Article|null $data */
+				$data = $event->getData();
+				if (!$data) {
+					return; 
+				}
+				$this->setupSpecificLocationNameField(
+					// This time, $event->getForm() will be the top-level form, 
+					// because we added the listener to the top - levelbuilder.
+					$event->getForm(),
+					$data->getLocation()
+				);
+			}
+		);
+
+		// POST_SUBMIT
 		// There's a Form object on top and then each individual field below is itself a full Form object
 		// When we call $builder->add() , that creates another "form builder" object for that field, 
 		// and you can fetch it later by saying $builder->get() .
