@@ -27,9 +27,12 @@ class ArticleFormType extends AbstractType{
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
 
+		/** @var Article|null $article */
 		$article = $options['data'] ?? null;
 
 		$isEdit = $article && $article->getId();
+		// if $article is an object, then $article->getLocation() , otherwise, null 
+		$location = $article ? $article->getLocation() : null;
 
 		$builder 
 			->add('title', TextType::class, [
@@ -50,20 +53,22 @@ class ArticleFormType extends AbstractType{
     			// because we pass the field type in second argument
     			'required' => false, 
 			])
-			->add('specificLocationName', ChoiceType::class, [
-				'placeholder' => 'Where exactly?',
-				'choices'  => [
-        			'TODO' => 'TODO'
-    			],
-    			'required' => false, 
-			])
 		;
+
+		if ($location) {
+			$builder->add('specificLocationName', ChoiceType::class, [
+				'placeholder' => 'Where exactly?',
+				'choices' => $this->getLocationNameChoices($location), 
+				'required' => false,
+			]); 
+		}
 
 		if ($options['include_published_at']) { 
 			$builder->add('publishedAt', null, [
 				'widget' => 'single_text', 
 			]);
 		}
+
 	}
 
 	public function configureOptions(OptionsResolver $resolver) {
@@ -73,10 +78,36 @@ class ArticleFormType extends AbstractType{
 			'include_published_at' => false,
 		]); 
 	}
-	// But, when you bind your form to a class, a special system - 
-	// called the "form type guessing" system - 
-	// tries to guess the proper "type" for each field.
-	// And when the form submits, it notices the data_class and so creates a new Article() object for us. 
-	// Then, it uses the setter methods to populate the data.
 
+	private function getLocationNameChoices(string $location)
+	{
+		$planets = [
+			'Mercury',
+			'Venus',
+			'Earth',
+			'Mars',
+			'Jupiter',
+			'Saturn',
+			'Uranus',
+			'Neptune',
+		];
+
+		$stars = [
+			'Polaris',
+			'Sirius',
+			'Alpha Centauari A',
+			'Alpha Centauari B',
+			'Betelgeuse',
+			'Rigel',
+			'Other'
+		];
+
+		$locationNameChoices = [
+			'solar_system' => array_combine($planets, $planets),
+			'star' => array_combine($stars, $stars),
+			'interstellar_space' => null,
+		];
+
+		return $locationNameChoices[$location];
+	}
 }

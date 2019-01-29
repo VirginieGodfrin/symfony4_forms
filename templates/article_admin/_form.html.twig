@@ -4,14 +4,22 @@
 	{{ form_row(articleForm.title, { 
 		label: 'Article title'
 	}) }}
+
 	{{ form_row(articleForm.author) }}
+
 	{{ form_row(articleForm.location) }}
-	{{ form_row(articleForm.specificLocationName) }}
+
+	{% if articleForm.specificLocationName is defined %} 
+		{{ form_row(articleForm.specificLocationName) }}
+	{% endif %}
+
 	{{ form_row(articleForm.content) }}
+
 	{# and if published is true we can see it #}
 	{% if articleForm.publishedAt is defined %} 
 		{{ form_row(articleForm.publishedAt) }}
 	{% endif %}
+
 	{# the button text :-) #}
 	<button type="submit" class="btn btn-primary">{{ button_text }}</button>
 {{ form_end(articleForm) }}
