@@ -47,15 +47,22 @@ class SecurityController extends AbstractController
         $form = $this->createForm(UserRegistrationFormType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            // dd($form['plainPassword']->getData());
-            /** @var User $user */
-            $user = $form->getData();
+            
+            /** @var UserRegistrationFormModel $userModel */
+            $userModel = $form->getData();
+            // When you use a model class, the downside is that you need to do a bit more work to transfer the data 
+            // from our model object into the entity object - or objects - that actually need it. 
+            // That's why these model classes are often called "data transfer objects": 
+            // they just hold data and help transfer it between systems: the form system and our entity classes.
+            $user = new User();
+            $user->setEmail($userModel->email); // the UserRegistrationFormModel proprieties are publics
+
             $user->setPassword($passwordEncoder->encodePassword( 
                 $user,
-                $form['plainPassword']->getData() 
+                $userModel->plainPassword 
             ));
 
-            if (true === $form['agreeTerms']->getData()) {
+            if (true === $userModel->agreeTerms) {
                 $user->agreeToTerms();
             }
 
