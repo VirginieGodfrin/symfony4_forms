@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 // Form classes are usually called form "types", 
 // and the only rule is that they must extend a class called AbstractType . 
@@ -25,14 +26,9 @@ class ArticleFormType extends AbstractType{
 	}
 
 	public function buildForm(FormBuilderInterface $builder, array $options) {
-		// we can see data in edit form and not in new form
-		// dd($options);
 
-		// if $options['data'] is not null and if it's exist , article = $options['data']
-		// but if $options['data'] do not exist set it to null
 		$article = $options['data'] ?? null;
-		// dd($article);
-		//  check if $article exist and if it got an id
+
 		$isEdit = $article && $article->getId();
 
 		$builder 
@@ -41,14 +37,28 @@ class ArticleFormType extends AbstractType{
 			]) 
 			->add('content')
 			->add('author', UserSelectTextType::class,[
-				// But it also now ignores any submitted data for this field. 
-				// So, if a nasty user removed the disabled attribute and updated the field, 
-				// meh - no problem - our form will ignore that submitted data.
-				'disabled' => $isEdit // true or false
-			])	
+				'disabled' => $isEdit
+			])
+			->add('location', ChoiceType::class, [
+				'placeholder' => 'Choose a location',
+				'choices'  => [
+        			'The Solar System' => "solar_system",
+        			'Near a star' => "star",
+        			'Interstellar Space' => "interstellar_space",
+        			// "the value in the form" => "the value in the db"
+    			],
+    			// because we pass the field type in second argument
+    			'required' => false, 
+			])
+			->add('specificLocationName', ChoiceType::class, [
+				'placeholder' => 'Where exactly?',
+				'choices'  => [
+        			'TODO' => 'TODO'
+    			],
+    			'required' => false, 
+			])
 		;
-		// in edit form $options['include_published_at'] is set to true
-		// in new form $options['include_published_at'] is set to false 
+
 		if ($options['include_published_at']) { 
 			$builder->add('publishedAt', null, [
 				'widget' => 'single_text', 
