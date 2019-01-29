@@ -1,5 +1,6 @@
 {{ form_start(articleForm, { 
 	'attr': {'class': 'form-signin', 'novalidate': 'novalidate'}
+
 }) }}
 	{{ form_row(articleForm.title, { 
 		label: 'Article title'
@@ -7,11 +8,21 @@
 
 	{{ form_row(articleForm.author) }}
 
-	{{ form_row(articleForm.location) }}
-
-	{% if articleForm.specificLocationName is defined %} 
-		{{ form_row(articleForm.specificLocationName) }}
-	{% endif %}
+	{{ form_row(articleForm.location, { 
+		attr: {
+			'data-specific-location-url': path('admin_article_location_select'),
+			'class': 'js-article-form-location' 
+		}
+	}) }}
+	
+	{# 	I'm adding this as a new element around the field instead of on the select element 
+		so that we can remove the field without losing this target element.
+	#}
+	<div class="js-specific-location-target">
+		{% if articleForm.specificLocationName is defined %} 
+			{{ form_row(articleForm.specificLocationName) }}
+		{% endif %}
+	</div>
 
 	{{ form_row(articleForm.content) }}
 

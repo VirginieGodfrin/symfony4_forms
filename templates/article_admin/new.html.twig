@@ -1,5 +1,10 @@
 {% extends 'article_admin/article_admin_base.html.twig' %}
 
+{% block javascripts %} 
+	{{ parent() }}
+	<script src="{{ asset('js/admin_article_form.js') }}"></script> 
+{% endblock %}
+
 {% block content_body %} 
 	<h1>Launch a new Article!  </h1>
 

@@ -86,4 +86,27 @@ class ArticleAdminController extends AbstractController
             'articleForm' => $form->createView()
         ]);
     }
+
+
+    /**
+     * @Route("/admin/article/location-select", name="admin_article_location_select") 
+     */
+    public function getSpecificLocationSelect(Request $request)
+    {
+        $article = new Article();
+        $article->setLocation($request->query->get('location'));
+
+        // We're going to build a temporary form using this Article's data, and render part of it as our response.
+        $form = $this->createForm(ArticleFormType::class, $article);
+        // thank to pre-set-data, the form have the correct specificNameLocation options based on whatever 
+        // location was just sent to us.
+        // no field? Return an empty response
+        if (!$form->has('specificLocationName')) { 
+            return new Response(null, 204);
+        }
+        // If we do have that field, we want to render it! Return and render a new template:
+        return $this->render('article_admin/_specific_location_name.html.twig', [ 
+            'articleForm' => $form->createView(),
+        ]);
+    }
 }
