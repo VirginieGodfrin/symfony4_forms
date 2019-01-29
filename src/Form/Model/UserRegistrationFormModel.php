@@ -3,6 +3,7 @@
 namespace App\Form\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\UniqueUser;
 
 // it is not possible to make UniqueEntity work on a class that is not an entity class. 
 class UserRegistrationFormModel {
@@ -10,6 +11,7 @@ class UserRegistrationFormModel {
 	/**
 	 * @Assert\NotBlank(message="Please enter an email")
 	 * @Assert\Email()
+	 * @UniqueUser()
 	 */
 	public $email;
 

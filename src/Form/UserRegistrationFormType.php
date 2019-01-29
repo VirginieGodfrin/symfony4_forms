@@ -15,7 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use App\Form\Model\UserRegistrationFormModel;
 
 
-// it is not possible to make UniqueEntity work on a class that is not an entity class. 
+
 class UserRegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
