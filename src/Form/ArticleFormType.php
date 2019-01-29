@@ -11,6 +11,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 
 // Form classes are usually called form "types", 
 // and the only rule is that they must extend a class called AbstractType . 
@@ -69,6 +72,24 @@ class ArticleFormType extends AbstractType{
 			]);
 		}
 
+		// the Form Event 
+		// There's a Form object on top and then each individual field below is itself a full Form object
+		// When we call $builder->add() , that creates another "form builder" object for that field, 
+		// and you can fetch it later by saying $builder->get() .
+		// The FormEvent contains the raw, submitted data and the entire Form object for this one field.
+		$builder->get('location')->addEventListener( 
+			FormEvents::POST_SUBMIT, 
+			function(FormEvent $event) {
+				// in this callback call setupSpecificLocationNameField
+				// dd($event); 
+				$form = $event->getForm();
+				$this->setupSpecificLocationNameField(
+					// we want to pass the top level Form object that we can add or remove the specificLocationName field
+					$form->getParent(), 
+					$form->getData()
+				);
+			}
+		);
 	}
 
 	public function configureOptions(OptionsResolver $resolver) {
@@ -110,4 +131,28 @@ class ArticleFormType extends AbstractType{
 
 		return $locationNameChoices[$location];
 	}
+
+	private function setupSpecificLocationNameField(FormInterface $form, ?string $location){
+		// if location is null remove specificLocationName field and return
+		if (null === $location) { 
+			$form->remove('specificLocationName');
+			return; 
+		}
+
+		//  This is needed for when the user selects "Interstellar Space":
+		//  that doesn't have any specific location name choices, and so we don't want that field at all.
+		$choices = $this->getLocationNameChoices($location);
+
+		if (null === $choices) {
+			$form->remove('specificLocationName'); 
+			return;
+		}
+
+		// Finally, we do want the specificLocationName field, but we want to use our new choices.
+		$form->add('specificLocationName', ChoiceType::class, [ 
+			'placeholder' => 'Where exactly?',
+			'choices' => $choices,
+			'required' => false,
+			]);
+		}
 }
